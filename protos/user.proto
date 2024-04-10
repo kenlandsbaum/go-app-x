@@ -7,6 +7,8 @@ message UserRequest {
     int64 id = 1;
 }
 
+message AllUsersRequest {}
+
 message NewUserRequest {
     string first_name = 1;
     string last_name = 2;
@@ -25,6 +27,7 @@ message User {
 }
 
 service UserService {
+    rpc GetAll(AllUsersRequest) returns (stream User);
     rpc GetOne(UserRequest) returns (User);
     rpc Create(NewUserRequest) returns (NewUserResponse);
 }

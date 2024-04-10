@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	UserService_GetAll_FullMethodName = "/UserService/GetAll"
 	UserService_GetOne_FullMethodName = "/UserService/GetOne"
 	UserService_Create_FullMethodName = "/UserService/Create"
 )
@@ -27,6 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
+	GetAll(ctx context.Context, in *AllUsersRequest, opts ...grpc.CallOption) (UserService_GetAllClient, error)
 	GetOne(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error)
 	Create(ctx context.Context, in *NewUserRequest, opts ...grpc.CallOption) (*NewUserResponse, error)
 }
@@ -37,6 +39,38 @@ type userServiceClient struct {
 
 func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
+}
+
+func (c *userServiceClient) GetAll(ctx context.Context, in *AllUsersRequest, opts ...grpc.CallOption) (UserService_GetAllClient, error) {
+	stream, err := c.cc.NewStream(ctx, &UserService_ServiceDesc.Streams[0], UserService_GetAll_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &userServiceGetAllClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type UserService_GetAllClient interface {
+	Recv() (*User, error)
+	grpc.ClientStream
+}
+
+type userServiceGetAllClient struct {
+	grpc.ClientStream
+}
+
+func (x *userServiceGetAllClient) Recv() (*User, error) {
+	m := new(User)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func (c *userServiceClient) GetOne(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*User, error) {
@@ -61,6 +95,7 @@ func (c *userServiceClient) Create(ctx context.Context, in *NewUserRequest, opts
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
+	GetAll(*AllUsersRequest, UserService_GetAllServer) error
 	GetOne(context.Context, *UserRequest) (*User, error)
 	Create(context.Context, *NewUserRequest) (*NewUserResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -70,6 +105,9 @@ type UserServiceServer interface {
 type UnimplementedUserServiceServer struct {
 }
 
+func (UnimplementedUserServiceServer) GetAll(*AllUsersRequest, UserService_GetAllServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
 func (UnimplementedUserServiceServer) GetOne(context.Context, *UserRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOne not implemented")
 }
@@ -87,6 +125,27 @@ type UnsafeUserServiceServer interface {
 
 func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&UserService_ServiceDesc, srv)
+}
+
+func _UserService_GetAll_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(AllUsersRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(UserServiceServer).GetAll(m, &userServiceGetAllServer{stream})
+}
+
+type UserService_GetAllServer interface {
+	Send(*User) error
+	grpc.ServerStream
+}
+
+type userServiceGetAllServer struct {
+	grpc.ServerStream
+}
+
+func (x *userServiceGetAllServer) Send(m *User) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _UserService_GetOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -141,6 +200,12 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_Create_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetAll",
+			Handler:       _UserService_GetAll_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "user.proto",
 }

@@ -1,0 +1,39 @@
+syntax = "proto3";
+// package pb;
+// option go_package = "internal/pb";
+package internal;
+
+option go_package = "go-app-x/internal/pb";
+
+message UserRequest {
+    int32 id = 1;
+}
+
+message Address {
+    string street = 1;
+    string city = 2;
+    string zipcode = 3;
+    string state = 4;
+}
+
+message User {
+    int32 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    repeated PhoneNumber phone = 5;
+    message PhoneNumber {
+        string number = 1;
+        PhoneType type = 2;
+    }
+    enum PhoneType {
+        MOBILE = 0;
+        LANDLINE = 1;
+    }
+    Address address = 6;
+}
+
+
+service UserService {
+    rpc GetUser (UserRequest) returns (User) {}
+}
