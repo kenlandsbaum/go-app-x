@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "go-app-x/internal/user";
+
+
+message UserRequest {
+    int64 id = 1;
+}
+
+message NewUserRequest {
+    string first_name = 1;
+    string last_name = 2;
+    string email = 3;
+}
+
+message NewUserResponse {
+    int64 id = 1;
+}
+
+message User {
+    int64 id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+}
+
+service UserService {
+    rpc GetOne(UserRequest) returns (User);
+    rpc Create(NewUserRequest) returns (NewUserResponse);
+}
