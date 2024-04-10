@@ -12,10 +12,6 @@ import (
 	"google.golang.org/grpc/test/bufconn"
 )
 
-var (
-	addr = ":8998"
-)
-
 const bufSize = 1024 * 1024
 
 var lis *bufconn.Listener
