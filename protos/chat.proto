@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "go-app-x/internal/chat";
+
+import "google/protobuf/timestamp.proto";
+
+message Chat {
+    string username = 1;
+    string content = 2;
+    google.protobuf.Timestamp timestamp = 3;
+}
+
+service ChatService {
+    rpc Send(stream Chat) returns (stream Chat);
+}

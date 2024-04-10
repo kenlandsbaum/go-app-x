@@ -16,3 +16,12 @@ rpccs:
 
 rpcs:
 	go run ./cmd/rpcserve/...
+
+chatp:
+	protoc --proto_path=protos --go_out=internal/chat --go_opt=paths=source_relative --go-grpc_out=internal/chat --go-grpc_opt=paths=source_relative protos/chat.proto
+
+chats:
+	go run ./cmd/rpcchat_serve/...
+
+chatc:
+	go run ./cmd/rpcchat_client/...

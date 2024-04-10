@@ -38,8 +38,8 @@ func handlePostThing(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(body)
 	decoder.Decode(&thing)
 	things = append(things, thing)
-	w.WriteHeader(201)
-	w.Write([]byte(fmt.Sprintf("{\"message\": \"%d things now\"}", len(things))))
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte(fmt.Sprintf("{\"message\":\"%d things now\"}", len(things))))
 }
 
 func handleGetThings(w http.ResponseWriter, r *http.Request) {
