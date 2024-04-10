@@ -27,7 +27,10 @@ func main() {
 	defer conn.Close()
 
 	client := chat.NewChatServiceClient(conn)
+	HandleChatClient(client)
+}
 
+func HandleChatClient(client chat.ChatServiceClient) {
 	stream, err := client.Send(context.Background())
 	if err != nil {
 		log.Fatalf("could not send messages from client %s", err)
