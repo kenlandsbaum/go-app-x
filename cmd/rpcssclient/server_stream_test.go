@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"go-app-x/internal/pb/user"
 	"go-app-x/internal/rpcserver"
-	"go-app-x/internal/user"
 	"net"
 	"testing"
 

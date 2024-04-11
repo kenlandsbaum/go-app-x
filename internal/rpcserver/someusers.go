@@ -1,6 +1,6 @@
 package rpcserver
 
-import "go-app-x/internal/user"
+import "go-app-x/internal/pb/user"
 
 var (
 	someUsers = []*user.User{

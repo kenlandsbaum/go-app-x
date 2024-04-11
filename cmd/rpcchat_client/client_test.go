@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"go-app-x/internal/chat"
+	"go-app-x/internal/pb/chat"
 	"io"
 	"log"
 	"net"

@@ -1,9 +1,9 @@
 
 test:
-	go test ./... -coverprofile cover.out
+	go test ./... -coverprofile cover.out | grep -v ".pb.go"
 
 cov:
-	go tool cover -func cover.out
+	go tool cover -func cover.out | grep -v ".pb.go"
 
 userp:
 	protoc --proto_path=protos --go_out=internal/user --go_opt=paths=source_relative --go-grpc_out=internal/user --go-grpc_opt=paths=source_relative protos/user.proto

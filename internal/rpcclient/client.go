@@ -2,7 +2,7 @@ package rpcclient
 
 import (
 	"encoding/json"
-	"go-app-x/internal/user"
+	"go-app-x/internal/pb/user"
 	"log"
 
 	"google.golang.org/grpc"

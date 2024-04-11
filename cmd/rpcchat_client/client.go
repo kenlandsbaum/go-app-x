@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"go-app-x/internal/chat"
 	"go-app-x/internal/env"
+	"go-app-x/internal/pb/chat"
 	"go-app-x/internal/rpcclient"
 	"io"
 	"log"

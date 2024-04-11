@@ -3,7 +3,8 @@ package rpcserver
 import (
 	"context"
 	"errors"
-	"go-app-x/internal/user"
+	"go-app-x/internal/pb/user"
+	"log"
 	"net"
 	"testing"
 
@@ -34,18 +35,21 @@ func assertOnResults(t *testing.T, res *user.User, expected *user.User) {
 	}
 }
 
-func TestUserServiceServer(t *testing.T) {
-	ctx := context.Background()
+func getTestConnection(ctx context.Context) *grpc.ClientConn {
 	conn, err := grpc.DialContext(
 		ctx, "bufnet",
 		grpc.WithContextDialer(bufDialer),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		t.Fatalf("Failed to dial bufnet: %v", err)
+		log.Fatalf("Failed to dial bufnet: %v", err)
 	}
+	return conn
+}
+func TestUserServiceServerGetOne(t *testing.T) {
+	ctx := context.Background()
+	conn := getTestConnection(ctx)
 	defer conn.Close()
 	testClient := user.NewUserServiceClient(conn)
-
 	type getCases struct {
 		in          *user.UserRequest
 		expected    *user.User
@@ -72,5 +76,22 @@ func TestUserServiceServer(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestUserServiceServerCreate(t *testing.T) {
+	ctx := context.Background()
+	conn := getTestConnection(ctx)
+	defer conn.Close()
+	testClient := user.NewUserServiceClient(conn)
+
+	res, err := testClient.Create(
+		ctx, &user.NewUserRequest{FirstName: "testfirst", LastName: "testlast", Email: "t@t.com"})
+	if err != nil {
+		t.Errorf("expected nil error but got %s\n", err)
+	}
+
+	if res.Id != 5 {
+		t.Errorf("got %d but expected 5\n", res.Id)
 	}
 }

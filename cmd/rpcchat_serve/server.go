@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go-app-x/internal/chat"
+	"go-app-x/internal/pb/chat"
 	"io"
 	"log"
 	"net"

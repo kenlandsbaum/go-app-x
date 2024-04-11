@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"go-app-x/internal/pb/user"
 	"go-app-x/internal/router"
 	"go-app-x/internal/rpcclient"
-	"go-app-x/internal/user"
 	"io"
 	"math/rand/v2"
 	"net/http"

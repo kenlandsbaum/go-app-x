@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"go-app-x/internal/env"
+	"go-app-x/internal/pb/user"
 	"go-app-x/internal/router"
 	"go-app-x/internal/rpcclient"
-	"go-app-x/internal/user"
 	"os"
 )
 

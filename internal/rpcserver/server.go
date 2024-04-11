@@ -2,13 +2,11 @@ package rpcserver
 
 import (
 	"context"
-	"math/rand/v2"
 
 	"errors"
-	"go-app-x/internal/user"
+	"go-app-x/internal/pb/user"
 	"log"
 	"net"
-	"time"
 
 	"google.golang.org/grpc"
 )
@@ -41,7 +39,6 @@ func (u UserServiceServer) GetAll(in *user.AllUsersRequest, stream user.UserServ
 			log.Printf("error streaming from server %s\n", err)
 			return err
 		}
-		delay(rand.IntN(3))
 	}
 	return nil
 }
@@ -55,8 +52,4 @@ func RunServer(lis net.Listener) error {
 		return err
 	}
 	return nil
-}
-
-func delay(i int) {
-	time.Sleep(time.Second * time.Duration(i))
 }
